@@ -7676,6 +7676,9 @@ const AIConfigComponent = ({
   const [enableVideoCardEntry, setEnableVideoCardEntry] = useState(true);
   const [enablePlayPageEntry, setEnablePlayPageEntry] = useState(true);
 
+  // 权限控制
+  const [allowRegularUsers, setAllowRegularUsers] = useState(true);
+
   // 高级设置
   const [temperature, setTemperature] = useState(0.7);
   const [maxTokens, setMaxTokens] = useState(1000);
@@ -7697,6 +7700,7 @@ const AIConfigComponent = ({
       setEnableHomepageEntry(config.AIConfig.EnableHomepageEntry !== false);
       setEnableVideoCardEntry(config.AIConfig.EnableVideoCardEntry !== false);
       setEnablePlayPageEntry(config.AIConfig.EnablePlayPageEntry !== false);
+      setAllowRegularUsers(config.AIConfig.AllowRegularUsers !== false);
       setTemperature(config.AIConfig.Temperature ?? 0.7);
       setMaxTokens(config.AIConfig.MaxTokens ?? 1000);
       setSystemPrompt(config.AIConfig.SystemPrompt || '');
@@ -7726,6 +7730,7 @@ const AIConfigComponent = ({
             EnableHomepageEntry: enableHomepageEntry,
             EnableVideoCardEntry: enableVideoCardEntry,
             EnablePlayPageEntry: enablePlayPageEntry,
+            AllowRegularUsers: allowRegularUsers,
             Temperature: temperature,
             MaxTokens: maxTokens,
             SystemPrompt: systemPrompt,
@@ -8012,6 +8017,33 @@ const AIConfigComponent = ({
             </label>
           </div>
         ))}
+      </div>
+
+      {/* 权限控制 */}
+      <div className='space-y-3 p-4 border border-gray-200 dark:border-gray-700 rounded-lg'>
+        <h4 className='text-sm font-semibold text-gray-900 dark:text-gray-100 mb-3'>
+          权限控制
+        </h4>
+
+        <div className='flex items-center justify-between py-2'>
+          <div>
+            <div className='text-sm font-medium text-gray-900 dark:text-gray-100'>
+              允许普通用户使用
+            </div>
+            <div className='text-xs text-gray-500 dark:text-gray-400'>
+              关闭后仅站长和管理员可使用AI问片功能
+            </div>
+          </div>
+          <label className='relative inline-flex items-center cursor-pointer'>
+            <input
+              type='checkbox'
+              checked={allowRegularUsers}
+              onChange={(e) => setAllowRegularUsers(e.target.checked)}
+              className='sr-only peer'
+            />
+            <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-yellow-300 dark:peer-focus:ring-yellow-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-green-600"></div>
+          </label>
+        </div>
       </div>
 
       {/* 高级设置 */}

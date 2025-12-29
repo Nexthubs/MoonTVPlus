@@ -5641,8 +5641,6 @@ function PlayPageClient() {
             title: detail.title,
             year: detail.year,
             douban_id: videoDoubanId !== 0 ? videoDoubanId : undefined,
-            tmdb_id: detail.tmdb_id,
-            type: detail.type === 'movie' ? 'movie' : 'tv',
             currentEpisode: currentEpisodeIndex + 1,
           }}
           welcomeMessage={`想了解《${detail.title}》的更多信息吗？我可以帮你查询剧情、演员、评价等。`}

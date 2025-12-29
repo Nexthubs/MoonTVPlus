@@ -8,6 +8,7 @@ import {
   VideoContext,
 } from '@/lib/ai-orchestrator';
 import { getConfig } from '@/lib/config';
+import { db } from '@/lib/db';
 
 export const runtime = 'nodejs';
 
@@ -72,9 +73,6 @@ async function streamClaudeChat(
     maxTokens: number;
   }
 ): Promise<ReadableStream> {
-  // Claude API格式: 移除system消息,单独传递
-  const userMessages = messages.filter((m) => m.role !== 'system');
-
   const response = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
     headers: {
@@ -87,7 +85,7 @@ async function streamClaudeChat(
       max_tokens: config.maxTokens,
       temperature: config.temperature,
       system: systemPrompt,
-      messages: userMessages,
+      messages: messages,
       stream: true,
     }),
   });
@@ -187,7 +185,23 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // 3. 解析请求参数
+    // 3. 权限检查：如果不允许普通用户使用，检查用户角色
+    if (!aiConfig.AllowRegularUsers) {
+      const username = authInfo.username;
+      // 站长始终有权限
+      if (username !== process.env.USERNAME) {
+        // 检查是否为管理员
+        const userInfo = await db.getUserInfoV2(username);
+        if (!userInfo || (userInfo.role !== 'admin' && userInfo.role !== 'owner') || userInfo.banned) {
+          return NextResponse.json(
+            { error: '该功能仅限站长和管理员使用' },
+            { status: 403 }
+          );
+        }
+      }
+    }
+
+    // 4. 解析请求参数
     const body = (await request.json()) as ChatRequest;
     const { message, context, history = [] } = body;
 
@@ -214,11 +228,11 @@ export async function POST(request: NextRequest) {
         tavilyApiKey: aiConfig.TavilyApiKey,
         serperApiKey: aiConfig.SerperApiKey,
         serpApiKey: aiConfig.SerpApiKey,
-        // 决策模型配置（固定使用自定义provider）
+        // 决策模型配置（固定使用自定义provider，复用主模型的API配置）
         enableDecisionModel: aiConfig.EnableDecisionModel,
         decisionProvider: 'custom',
-        decisionApiKey: aiConfig.DecisionCustomApiKey,
-        decisionBaseURL: aiConfig.DecisionCustomBaseURL,
+        decisionApiKey: aiConfig.CustomApiKey,
+        decisionBaseURL: aiConfig.CustomBaseURL,
         decisionModel: aiConfig.DecisionCustomModel,
       }
     );

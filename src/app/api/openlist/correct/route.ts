@@ -114,7 +114,6 @@ export async function POST(request: NextRequest) {
     metaInfo.folders[key] = {
       folderName: folderName,
       tmdb_id: tmdbId || null,
-      douban_id: doubanId || null,
       title: title,
       poster_path: posterPath,
       release_date: releaseDate || '',

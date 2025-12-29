@@ -130,7 +130,6 @@ export async function GET(request: NextRequest) {
             id: key,
             folder: info.folderName,
             tmdbId: info.tmdb_id,
-            doubanId: info.douban_id,
             title: info.title,
             poster: getTMDBImageUrl(info.poster_path),
             releaseDate: info.release_date,
