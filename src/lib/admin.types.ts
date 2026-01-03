@@ -162,6 +162,7 @@ export interface AdminConfig {
     Username?: string; // 用户名（或使用API Key）
     Password?: string; // 密码
     UserId?: string; // 用户ID（登录后获取）
+    AuthToken?: string; // 认证令牌（用户名密码登录后获取）
     Libraries?: string[]; // 要显示的媒体库ID（可选，默认全部）
     LastSyncTime?: number; // 最后同步时间戳
     ItemCount?: number; // 媒体项数量
