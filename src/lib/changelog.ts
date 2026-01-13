@@ -17,7 +17,8 @@ export const changelog: ChangelogEntry[] = [
 		"私人影库增加小雅支持",
 		"测速增加码率测算",
 		"私人影库增加求片功能",
-		"搜索增加简繁转换器"
+		"搜索增加简繁转换器",
+		"openlist多目录扫描支持"
     ],
     changed: [
 		"视频源保留关键字增加xiaoya，emby",
